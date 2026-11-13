@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Joke Tycoon by iLucker01</title>
+    <style>
+        :root {
+            --bg-main: #090b10;
+            --bg-card: #121622;
+            --bg-card-hover: #191f30;
+            --primary: #00f0ff;
+            --secondary: #9d00ff;
+            --accent: #ff0055;
+            --gold: #ffbe0b;
+            --success: #00e676;
+            --text-main: #f0f4f8;
+            --text-muted: #8b9bb4;
+            --border: #232b3e;
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 10% 15%, rgba(0, 240, 255, 0.08), transparent 35%),
+                radial-gradient(circle at 90% 85%, rgba(157, 0, 255, 0.08), transparent 35%);
+        }
+
+        header {
+            background: rgba(18, 22, 34, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-tag {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            -webkit-text-fill-color: var(--text-muted);
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-pill {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .points-val {
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        .rank-badge {
+            color: var(--primary);
+        }
+
+        main {
+            max-width: 1150px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 1.8rem;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.8rem;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            gap: 1rem;
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .joke-stage {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 2rem 1.5rem;
+            min-height: 170px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .joke-category {
+            position: absolute;
+            top: 12px;
+            left: 14px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            background: rgba(0, 240, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .joke-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-top: 0.8rem;
+        }
+
+        .joke-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--primary), #00b8d4);
+            color: #05080f;
+            border: none;
+            padding: 0.85rem 1.4rem;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover { opacity: 0.9; }
+        .btn:active { transform: scale(0.97); }
+
+        .btn-secondary {
+            background: var(--bg-card-hover);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            flex: 0 0 auto;
+        }
+
+        .btn-secondary.saved {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .btn-accent {
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            color: white;
+            width: 100%;
+        }
+
+        /* ADD JOKE FORM */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        textarea, select {
+            width: 100%;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.9rem;
+            border-radius: 12px;
+            outline: none;
+            font-size: 0.95rem;
+            resize: vertical;
+        }
+
+        textarea:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        /* UPGRADES SHOP */
+        .upgrade-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .upgrade-item {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .upgrade-item:hover {
+            border-color: var(--secondary);
+        }
+
+        .upgrade-info h4 {
+            font-size: 1rem;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lvl-badge {
+            font-size: 0.72rem;
+            background: var(--bg-card-hover);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 6px;
+        }
+
+        .upgrade-info p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .buy-btn {
+            background: var(--bg-card-hover);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .buy-btn:hover:not(:disabled) {
+            background: var(--gold);
+            color: #090b10;
+        }
+
+        .buy-btn:disabled {
+            border-color: var(--border);
+            color: var(--text-muted);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* FAVORITES LIST */
+        .fav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .fav-item {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .del-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 4px;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding: 1.5rem;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+        }
+
+        /* FLOATING POINT ANIMATION */
+        .float-point {
+            position: fixed;
+            color: var(--gold);
+            font-weight: 900;
+            font-size: 1.2rem;
+            pointer-events: none;
+            animation: floatUp 0.9s ease-out forwards;
+            z-index: 999;
+            text-shadow: 0 2px 10px rgba(255, 190, 11, 0.5);
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-45px) scale(1.2); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 850px) {
+            main { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        😂 Cyber Joke Tycoon
+        <span class="author-tag">Vytvoril: iLucker01 • Generátor vtipov & Hra</span>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-pill">
+            🏆 Hodnosť: <span class="rank-badge" id="rank-display">Začiatočník</span>
+        </div>
+        <div class="stat-pill">
+            ⚡ Body humoru: <span class="points-val" id="points-display">0</span>
+        </div>
+        <div class="stat-pill" style="font-size: 0.82rem; color: var(--text-muted);">
+            +<span id="ppc-display">1</span>/klik | +<span id="pps-display">0</span>/sek
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- ĽAVÝ STĹPEC: GENERÁTOR A PRIDÁVANIE VTIPOV -->
+    <div class="column">
+        <!-- GENERÁTOR -->
+        <div class="card">
+            <div class="card-header">
+                <h2>🎤 Pódium Vtipov</h2>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Klikaj a zbieraj body!</span>
+            </div>
+
+            <div class="joke-stage">
+                <span class="joke-category" id="joke-cat">Štart</span>
+                <p class="joke-text" id="joke-text">Klikni na tlačidlo nižšie, prečítaj si vtip a získaj svoj prvý bod humoru!</p>
+            </div>
+
+            <div class="joke-actions">
+                <button class="btn" id="next-joke-btn" onclick="generateJoke(event)">😂 Ďalší vtip (+<span id="btn-ppc">1</span> bod)</button>
+                <button class="btn btn-secondary" id="fav-btn" onclick="toggleFavorite()">☆ Obľúbený</button>
+            </div>
+        </div>
+
+        <!-- PRIDAŤ VLASTNÝ VTIP -->
+        <div class="card">
+            <div class="card-header">
+                <h2>✍️ Napíš vlastný vtip</h2>
+                <span style="font-size: 0.8rem; color: var(--success); font-weight: 700;">Bonus: +5 bodov!</span>
+            </div>
+
+            <div class="form-group">
+                <select id="new-joke-cat">
+                    <option value="Programátorský">💻 Programátorský</option>
+                    <option value="Školský">🎒 Školský</option>
+                    <option value="Zo života">🌍 Zo života</option>
+                    <option value="Vlastný">⭐ Môj originál</option>
+                </select>
+                <textarea id="new-joke-input" rows="3" placeholder="Sem napíš svoj vtip..."></textarea>
+                <button class="btn btn-accent" onclick="addCustomJoke()">Pridať vtip do hry (+5 bodov)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRAVÝ STĹPEC: VYLEPŠENIA A OBĽÚBENÉ -->
+    <div class="column">
+        <!-- OBCHOD S VYLEPŠENIAMI -->
+        <div class="card">
+            <div class="card-header">
+                <h2>🛒 Obchod Komika</h2>
+                <span style="font-size: 0.8rem; color: var(--gold);">Míňaj body na bonusy</span>
+            </div>
+
+            <div class="upgrade-list" id="upgrades-container"></div>
+        </div>
+
+        <!-- OBĽÚBENÉ VTIPY -->
+        <div class="card">
+            <div class="card-header">
+                <h2>⭐ Obľúbené vtipy (<span id="fav-count">0</span>)</h2>
+            </div>
+
+            <div class="fav-list" id="favorites-container">
+                <div class="empty-msg">Zatiaľ nemáš žiadne obľúbené vtipy. Klikni na hviezdičku pri vtipe, ktorý ťa rozosmeje!</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    Cyber Joke Tycoon • Vytvoril iLucker01 • Dáta sa ukladajú automaticky v prehliadači
+</footer>
+
+<script>
+    // ZÁKLADNÁ DATABÁZA VTIPOV
+    const defaultJokes = [
+        { cat: "Programátorský", text: "Prečo programátori nemajú radi prírodu? Lebo je tam príliš veľa bugov." },
+        { cat: "Programátorský", text: "Koľko programátorov treba na výmenu žiarovky? Žiadneho, to je hardvérový problém." },
+        { cat: "Programátorský", text: "Manželka hovorí programátorovi: 'Choď do obchodu a kúp rožok. Ak budú mať vajcia, vezmi desať.' Programátor sa vráti s desiatimi rožkami a hovorí: 'Mali vajcia.'" },
+        { cat: "Programátorský", text: "Existujú len 10 druhov ľudí na svete: tí, čo rozumejú binárnej sústave, a tí, čo nie." },
+        { cat: "Školský", text: "Učiteľka sa pýta Jožka: 'Jožko, prečo píšeš tak pomaly?' Jožko odpovedá: 'Lebo pani učiteľka nevie tak rýchlo čítať!'" },
+        { cat: "Školský", text: "Otec sa pýta syna: 'Prečo máš z matematiky päťku?' Syn: 'Lebo učiteľka povedala, že 3 + 2 je 5, a na druhý deň tvrdila, že 4 + 1 je tiež 5. Sama v tom nemá poriadok!'" },
+        { cat: "Školský", text: "Čo je to absolútna rýchlosť? Keď zvoní na prestávku a učiteľka ešte nedopovedala vetu." },
+        { cat: "Zo života", text: "Dnes som si išiel zabehať. Po 5 minútach som zistil, že som si zabudol mobil, tak som sa musel vrátiť. Bol to skvelý tréning." },
+        { cat: "Zo života", text: "Moja peňaženka je ako cibuľa. Keď ju otvorím, chce sa mi plakať." },
+        { cat: "Zo života", text: "Niekedy si hovorím, že by som mal začať cvičiť. Potom si ľahнем a počkám, kým ma ten nápad prejde." },
+        { cat: "Programátorský", text: "Čo urobí programátor, keď mu zamrzne počítač? Otvorí okno." },
+        { cat: "Zo života", text: "Pondelok by mal byť voliteľný. Aspoň do stredy." }
+    ];
+
+    // VYLEPŠENIA V OBCHODE
+    const upgradesConfig = [
+        { id: "mic", name: "Lepší mikrofón", desc: "+1 bod za každý klik na vtip", baseCost: 10, costMult: 1.6, ppcAdd: 1, ppsAdd: 0 },
+        { id: "laugh", name: "Smiech z publika", desc: "+1 bod automaticky každú sekundu", baseCost: 25, costMult: 1.7, ppcAdd: 0, ppsAdd: 1 },
+        { id: "writer", name: "Scenárista vtipov", desc: "+3 body za každý klik", baseCost: 80, costMult: 1.8, ppcAdd: 3, ppsAdd: 0 },
+        { id: "ai_comic", name: "AI Komik 3000", desc: "+5 bodov automaticky každú sekundu", baseCost: 150, costMult: 1.8, ppcAdd: 0, ppsAdd: 5 },
+        { id: "crown", name: "Zlatá koruna humoru", desc: "+15 bodov za klik aj za sekundu", baseCost: 500, costMult: 2.0, ppcAdd: 15, ppsAdd: 15 }
+    ];
+
+    // STAV HRY (načítanie z localStorage)
+    let state = JSON.parse(localStorage.getItem("cyberJokeTycoon_v1")) || {
+        points: 0,
+        totalEarned: 0,
+        customJokes: [],
+        favorites: [],
+        upgrades: { mic: 0, laugh: 0, writer: 0, ai_comic: 0, crown: 0 }
+    };
+
+    let currentJoke = null;
+    let lastIndex = -1;
+
+    function saveState() {
+        localStorage.setItem("cyberJokeTycoon_v1", JSON.stringify(state));
+    }
+
+    function getAllJokes() {
+        return [...defaultJokes, ...state.customJokes];
+    }
+
+    function getStats() {
+        let ppc = 1;
+        let pps = 0;
+        upgradesConfig.forEach(u => {
+            const lvl = state.upgrades[u.id] || 0;
+            ppc += lvl * u.ppcAdd;
+            pps += lvl * u.ppsAdd;
+        });
+        return { ppc, pps };
+    }
+
+    function getRank(total) {
+        if (total < 20) return "Začiatočník 🌱";
+        if (total < 100) return "Zabávač triedy 🎭";
+        if (total < 300) return "Stand-up Komik 🎤";
+        if (total < 1000) return "Majster Humoru 🔥";
+        return "Legenda Komédie 👑";
+    }
+
+    function spawnFloatingText(x, y, text) {
+        const el = document.createElement("div");
+        el.className = "float-point";
+        el.textContent = text;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 900);
+    }
+
+    function generateJoke(event) {
+        const jokes = getAllJokes();
+        let idx;
+        do {
+            idx = Math.floor(Math.random() * jokes.length);
+        } while (idx === lastIndex && jokes.length > 1);
+
+        lastIndex = idx;
+        currentJoke = jokes[idx];
+
+        document.getElementById("joke-cat").textContent = currentJoke.cat;
+        document.getElementById("joke-text").textContent = currentJoke.text;
+
+        const { ppc } = getStats();
+        state.points += ppc;
+        state.totalEarned += ppc;
+
+        if (event) {
+            spawnFloatingText(event.clientX, event.clientY - 15, `+${ppc}`);
+        }
+
+        updateFavButton();
+        updateUI();
+        saveState();
+    }
+
+    function toggleFavorite() {
+        if (!currentJoke) return;
+        const exists = state.favorites.some(f => f.text === currentJoke.text);
+        if (exists) {
+            state.favorites = state.favorites.filter(f => f.text !== currentJoke.text);
+        } else {
+            state.favorites.push(currentJoke);
+        }
+        updateFavButton();
+        renderFavorites();
+        saveState();
+    }
+
+    function removeFavorite(index) {
+        state.favorites.splice(index, 1);
+        updateFavButton();
+        renderFavorites();
+        saveState();
+    }
+
+    function updateFavButton() {
+        const btn = document.getElementById("fav-btn");
+        if (!currentJoke) return;
+        const isFav = state.favorites.some(f => f.text === currentJoke.text);
+        btn.textContent = isFav ? "★ Uložené" : "☆ Obľúbený";
+        btn.classList.toggle("saved", isFav);
+    }
+
+    function addCustomJoke() {
+        const input = document.getElementById("new-joke-input");
+        const cat = document.getElementById("new-joke-cat").value;
+        const text = input.value.trim();
+
+        if (text.length < 5) {
+            alert("Napíš trochu dlhší vtip!");
+            return;
+        }
+
+        const newJoke = { cat, text };
+        state.customJokes.push(newJoke);
+        currentJoke = newJoke;
+
+        document.getElementById("joke-cat").textContent = currentJoke.cat;
+        document.getElementById("joke-text").textContent = currentJoke.text;
+
+        // Bonus 5 bodov za vlastný vtip
+        state.points += 5;
+        state.totalEarned += 5;
+        input.value = "";
+
+        updateFavButton();
+        updateUI();
+        saveState();
+        alert("Super vtip pridaný! Získal si bonus +5 bodov humoru!");
+    }
+
+    function buyUpgrade(id) {
+        const u = upgradesConfig.find(item => item.id === id);
+        const lvl = state.upgrades[id] || 0;
+        const cost = Math.floor(u.baseCost * Math.pow(u.costMult, lvl));
+
+        if (state.points >= cost) {
+            state.points -= cost;
+            state.upgrades[id] = lvl + 1;
+            updateUI();
+            saveState();
+        }
+    }
+
+    function renderUpgrades() {
+        const container = document.getElementById("upgrades-container");
+        container.innerHTML = upgradesConfig.map(u => {
+            const lvl = state.upgrades[u.id] || 0;
+            const cost = Math.floor(u.baseCost * Math.pow(u.costMult, lvl));
+            const canAfford = state.points >= cost;
+
+            return `
+                <div class="upgrade-item">
+                    <div class="upgrade-info">
+                        <h4>${u.name} <span class="lvl-badge">Lvl ${lvl}</span></h4>
+                        <p>${u.desc}</p>
+                    </div>
+                    <button class="buy-btn" onclick="buyUpgrade('${u.id}')" ${canAfford ? "" : "disabled"}>
+                        ⚡ ${cost}
+                    </button>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderFavorites() {
+        const container = document.getElementById("favorites-container");
+        document.getElementById("fav-count").textContent = state.favorites.length;
+
+        if (state.favorites.length === 0) {
+            container.innerHTML = `<div class="empty-msg">Zatiaľ nemáš žiadne obľúbené vtipy. Klikni na hviezdičku pri vtipe, ktorý ťa rozosmeje!</div>`;
+            return;
+        }
+
+        container.innerHTML = state.favorites.map((fav, idx) => `
+            <div class="fav-item">
+                <div>
+                    <strong style="color: var(--primary); font-size: 0.75rem;">[${fav.cat}]</strong>
+                    <p style="margin-top: 3px;">${fav.text}</p>
+                </div>
+                <button class="del-btn" onclick="removeFavorite(${idx})" title="Odstrániť">✖</button>
+            </div>
+        `).join("");
+    }
+
+    function updateUI() {
+        const { ppc, pps } = getStats();
+        document.getElementById("points-display").textContent = Math.floor(state.points);
+        document.getElementById("ppc-display").textContent = ppc;
+        document.getElementById("pps-display").textContent = pps;
+        document.getElementById("btn-ppc").textContent = ppc;
+        document.getElementById("rank-display").textContent = getRank(state.totalEarned);
+
+        renderUpgrades();
+    }
+
+    // Automatické pripočítavanie bodov za sekundu (pasívny príjem)
+    setInterval(() => {
+        const { pps } = getStats();
+        if (pps > 0) {
+            state.points += pps;
+            state.totalEarned += pps;
+            updateUI();
+            saveState();
+        }
+    }, 1000);
+
+    // Štart
+    updateUI();
+    renderFavorites();
+</script>
+</body>
+</html>
